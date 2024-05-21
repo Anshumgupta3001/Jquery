@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script> 
+</head>
+<body>
+    <button id="fetchDataBtn">Fetch Data</button>
+    <div id="dataContainer"></div>
+
+    <script>
+        $(document).ready(function () {
+            var socket = io(); 
+            
+            $("#fetchDataBtn").click(function () {
+                socket.emit('fetchData'); 
+            });
+
+            socket.on('displayData', function(data) {
+                console.log(data);
+                displayData(data);
+            });
+
+            function displayData(data) {
+                var html = "<h2>Data:</h2>";
+                html += "<table>";
+                html += "<tr><th>gupta</th><th>anshum</th></tr>";
+
+                data.forEach(function(row) {
+                    if (row.anshum !== undefined && row.gupta !== undefined) {
+                        html += "<tr>";
+                        html += "<td>" + row.anshum + "</td>";
+                        html += "<td>" + row.gupta + "</td>";
+                        html += "</tr>";
+                    }
+                });
+                html += "</table>";
+                $("#dataContainer").html(html);
+            }
+        });
+    </script>
+</body>
+</html>
